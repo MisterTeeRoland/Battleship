@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='UTF-8' />
+		<title>Battleship</title>
+		<style>
+		<!--
+			@font-face {font-family: BigJohn; src: url(bigjohn.otf);}
+			body {background: black url(ocean.jpg) no-repeat center center fixed; background-size: cover; font-family: sans-serif; text-align: center; margin: 0;}
+			header {background-color: rgba(0,0,0,0.8); margin: 0; padding: 0; color: #93b5d4; display: table-cell; vertical-align: middle;}
+			h1 {font-family: BigJohn; font-size: 5vw; margin: 0; padding: 0;}
+			h2 {font-family: BigJohn; font-size: 2vw;}
+			button {border-radius: 10px; border: 0; padding: 10px; cursor: pointer;}
+			footer {background-color: #494949; font-family: BigJohn; font-size: 1vw; margin: auto; color: white; display: table-cell; vertical-align: middle;}
+			table {border-collapse: collapse; margin: 20px auto;}
+			td {cursor: pointer; background-color: gray; border: 1px solid white; height: 30px; width: 30px;}
+			#gamewrapper {}	
+			#gameboard div {display: inline-table;}
+			#result {width: 20%; min-width: 300px;}
+			#p1, #p2 {width: 39%; min-width: 500px; text-align: center;}
+			#resultboard {max-height: 265px; background-color: white; color: #494949; overflow: auto; text-align: left;}
+			.game {background-color: rgba(0,0,0,0.5); color: white; margin: 0 auto; display: table-cell; vertical-align: middle;}
+		-->
+		</style>
+		<script src='game.js'></script>
+	</head>
+
+	<body>
+		<header id='header'>
+			<h1 id='title'>Battleship</h1>
+			<h2>Welcome to maritime law.</h2>
+		</header>
+
+		<div id='gamewrapper'>
+
+			<div id='playerCount' class='game'>
+				<h3>How would you like to play?</h3>
+				<button onclick='setGame("pvc")'>Player vs. Computer</button>
+				<!--<button onclick='setGame("pvp")'>Player vs. Player</button>-->
+			</div>
+
+			<!-- 5 4 3 3 2 -->
+			<div id='setupPlayer1' class='game'>
+				<h3>Player 1: Place your pieces!</h3>
+				<select id='pieces'>
+					<option value='c' selected>Carrier</option>
+					<option value='b'>Battleship</option>
+					<option value='d'>Destroyer</option>
+					<option value='s'>Submarine</option>
+					<option value='pb'>Patrol Boat</option>
+				</select>
+				<select id='direction'>
+					<option value='h' selected>Horizontal</option>
+					<option value='v'>Vertical</option>
+				</select>
+				<table id='board'></table>
+			</div>
+
+			<div id='gameboard' class='game'>
+				<h3 id='turn'>Player 1's Turn</h3>
+				
+				<div id='p1'>
+					<h3>Player 1</h3>
+					<h3><span id='p1ShipsLeft'></span></h3>
+					<table id='p1board'></table>
+				</div>
+
+				<div id='result'>
+					<h3>Results</h3>
+					<div id='resultboard'>
+					</div>
+				</div>
+
+				<div id='p2'>
+					<h3>Computer</h3>
+					<h3><span id='p2ShipsLeft'></span></h3>
+					<table id='p2board'></table>
+				</div>
+			</div>
+
+			<div id='gameOver' class='game'>
+				<h1 id='winner'></h1><br>
+				<button onclick='location.reload()'>Play Again</button>
+			</div>
+	
+		</div>
+
+		<footer id='footer'>
+			<p>&copy; Copyright Tyler Roland <span id='date'></span>. All rights reserved.</p>
+		</footer>
+	</body>
+</html>
