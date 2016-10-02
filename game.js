@@ -15,7 +15,6 @@ function setGame(type) {
 }
 
 
-
 //function to place a ship at clicked location
 function placeCurrentPiece(cell) {
 	var row = cell.charAt(0);
@@ -26,8 +25,15 @@ function placeCurrentPiece(cell) {
 		var pieceDirection = document.getElementById('direction').value;
 	}
 	else if (turn == 'p2') {
-		var currentPiece = p2Ship;
-		var pieceDirection = p2Direction;
+		if (gameType == 'pvc') {
+			var currentPiece = p2Ship;
+			var pieceDirection = p2Direction;
+		}
+		else {
+			var currentPiece = document.getElementById('pieces').value;
+			var pieceDirection = document.getElementById('direction').value;
+		} 
+
 	}
 
 	if (currentPiece == 'c')
@@ -100,18 +106,37 @@ function placeCurrentPiece(cell) {
 
 	//p1 pieces set, either set up p2 pieces or comp pieces
 	if (turn == 'p1' && p1ShipArray.length == 5) {
-		clearBoard();
-		turn = 'p2';
-		setUpCompPieces();
+		document.getElementById("savePieces").style.display = 'block';
 	}
 	else if (turn == 'p2')
 	{
 		if (p2ShipArray.length == 5) {
-			turn = 'p1';
-			startGame();
+			if (gameType == 'pvp')
+				document.getElementById("savePieces").style.display = 'block';
+			else
+				savePieces();
+			
 		}
 		else
 			setUpCompPieces();
+	}
+}
+
+function savePieces() {
+	if (turn == 'p1') {
+		clearBoard();
+		document.getElementById('savePieces').style.display = 'none';
+		document.getElementById('titleSetup').innerHTML = "Player 2: Place your pieces!";
+		turn = 'p2';
+
+		if (gameType == 'pvc')
+			setUpCompPieces();
+	}
+	else {
+		turn = 'p1';
+		document.getElementById('savePieces').style.display = 'none';
+		document.getElementById('titleSetup').innerHTML = "Player 1: Place your pieces!";
+		startGame();
 	}
 }
 
@@ -193,6 +218,9 @@ function setUpCompPieces() {
 function startGame() {
 	//alert("starting game!");
 
+	if (gameType == 'pvp')
+		document.getElementById('p2Title').innerHTML = "Player 2";
+
 	//hide set up board
 	hideAll();
 	setUpGameBoard();
@@ -208,8 +236,14 @@ function setUpGameBoard() {
 	for (var i = 0; i < 8; i++) {
 		var rowString = "<tr>";
 
-		for (var j = 0; j < 8; j++)
-			rowString += "<td id='p1"+i+""+j+"'></td>"; 
+		if (gameType == 'pvc') {
+			for (var j = 0; j < 8; j++)
+				rowString += "<td id='p1"+i+""+j+"'></td>"; 
+		}
+		else if (gameType == 'pvp') {
+			for (var j = 0; j < 8; j++)
+				rowString += "<td id='p1"+i+""+j+"' onclick='Fire(\"p1"+i+''+j+"\")'></td>";
+		}
 		
 		rowString += "</tr>";
 		table.innerHTML += rowString;
@@ -239,62 +273,87 @@ function Fire(space) {
 	if (document.getElementById(space).style.backgroundColor != 'red' || document.getElementById(space).style.backgroundColor != 'blue') {
 		var resultArea = document.getElementById('resultboard');
 
+		var p = 'p' + space.charAt(1);
 		var row = space.charAt(2);
 		var col = space.charAt(3);
 		var cell = row + '' + col;
+
+		//alert("Turn: " + turn + " | Cell fired at: " + (p + cell));
+
+		//only work if it is current player's turn. (no playing out of turn)
+		if ((p == 'p2' && turn == 'p1') || (p == 'p1' && turn == 'p2')) {
 	
-		//check each index of opposing turn's ship array
-		if (turn == 'p1') {
+			//check each index of opposing turn's ship array
+			if (turn == 'p1') {
 
-			for (var i = 0; i < p2ShipArray.length; i++) {
-				var ship = p2ShipArray[i];
+				for (var i = 0; i < p2ShipArray.length; i++) {
+					var ship = p2ShipArray[i];
 
-				for (var j = 0; j < ship.placement.length; j++)
-				{
-					if (ship.placement[j] == cell)
+					for (var j = 0; j < ship.placement.length; j++)
 					{
-						document.getElementById(space).style.backgroundColor = 'red';
-						checkSunk(ship);
-						return;
+						if (ship.placement[j] == cell)
+						{
+							document.getElementById(space).style.backgroundColor = 'red';
+							checkSunk(ship);
+							return;
+						}
 					}
 				}
-			}
-			document.getElementById(space).style.backgroundColor = 'blue';
-			setTimeout(function(){
-				compTurn();
-			}, 500);
-			return;
-		}
-		else if (turn == 'p2') {
-			for (var i = 0; i < p1ShipArray.length; i++) {
-				var ship = p1ShipArray[i];
+				document.getElementById(space).style.backgroundColor = 'blue';
+				turn = 'p2';
+				setTimeout(function(){ 
+					document.getElementById('p1').style.display = 'inline-table';
+					document.getElementById('p2').style.display = 'none';
+				}, 500);
 
-				for (var j = 0; j < ship.placement.length; j++)
-				{
-					if (ship.placement[j] == cell)
+				if (gameType == 'pvc') {
+					document.getElementById('turn').innerHTML = "Computer's Turn";
+					setTimeout(function(){ compTurn(); }, 1000);
+				}
+				else {
+					document.getElementById('turn').innerHTML = "Player 2's Turn";
+				}
+
+				return;
+			}
+			else if (turn == 'p2') {
+				for (var i = 0; i < p1ShipArray.length; i++) {
+					var ship = p1ShipArray[i];
+
+					for (var j = 0; j < ship.placement.length; j++)
 					{
-						document.getElementById(space).style.backgroundColor = 'red';
-						checkSunk(ship);
-						setTimeout(function(){
-							compTurn();
-						}, 500);
-						return;
+						if (ship.placement[j] == cell)
+						{
+							document.getElementById(space).style.backgroundColor = 'red';
+							checkSunk(ship);
+							setTimeout(function(){
+								compTurn();
+							}, 500);
+							return;
+						}
 					}
 				}
+				document.getElementById(space).style.backgroundColor = 'blue';
+				turn = 'p1';
+				document.getElementById('turn').innerHTML = "Player 1's Turn";
+				setTimeout(function() {
+					document.getElementById('p2').style.display = 'inline-table';
+					document.getElementById('p1').style.display = 'none';
+				}, 500);
+				return;
 			}
-			document.getElementById(space).style.backgroundColor = 'blue';
-			turn = 'p1';
-			document.getElementById('turn').innerHTML = "Player 1's Turn";
-			return;
 		}
+		else
+			alert("playing out of turn!");
 	}
 	else {
 		if (turn == 'p1')
 			return;
 		else if (turn == 'p2') {
-			setTimeout(function(){
-				compTurn();
-			}, 500);
+			if (gameType == 'pvc')
+				setTimeout(function(){ compTurn(); }, 500);
+			else
+				return;
 		}
 	}
 }
@@ -403,6 +462,8 @@ function hideAll() {
 	document.getElementById('setupPlayer1').style.display = 'none';
 	document.getElementById('gameboard').style.display = 'none';
 	document.getElementById('gameOver').style.display = 'none';
+	document.getElementById('header').style.display = 'none';
+	document.getElementById('footer').style.display = 'none';
 }
 
 //set up the div heights based on window innerHeight
@@ -413,7 +474,13 @@ function setUpPage() {
 	document.getElementById('header').style.height = (height * 0.3) +"px";
 	document.getElementById('header').style.width = width + 'px';
 	document.getElementById('gamewrapper').style.width = width +"px";
+	if (document.getElementById('header').style.display == 'none')
+		document.getElementById('gamewrapper').style.height = height + 'px';
+	else
+		document.getElementById('gamewrapper').style.height = (height * 0.6) +"px";
 	document.getElementById('footer').style.width = width + "px";
+	document.getElementById('footer').style.height = (height * 0.1) + "px";
+
 
 	var elements = document.getElementsByClassName('game');
 	for (var i = 0, length = elements.length; i < length; i++)
@@ -448,6 +515,8 @@ window.onload = function() {
 	document.getElementById('date').innerHTML = new Date().getFullYear();
 	hideAll();
 	document.getElementById('playerCount').style.display = 'table-cell';
+	document.getElementById('header').style.display = 'table-cell';
+	document.getElementById('footer').style.display = 'table-cell';
 }
 
 window.onresize = function() {
