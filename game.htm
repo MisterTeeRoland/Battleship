@@ -7,21 +7,28 @@
 		<!--
 			@font-face {font-family: BigJohn; src: url(bigjohn.otf);}
 			body {background: black url(ocean.jpg) no-repeat center center fixed; background-size: cover; font-family: sans-serif; text-align: center; margin: 0;}
-			header {background-color: rgba(0,0,0,0.8); margin: 0; padding: 0; color: #93b5d4; display: table-cell; vertical-align: middle;}
+			header {background-color: #202020; margin: 0; padding: 0; color: #93b5d4; display: table-cell; vertical-align: middle;}
 			h1 {font-family: BigJohn; font-size: 80px; margin: 0; padding: 0;}
 			h2 {font-family: BigJohn; font-size: 40px;}
 			h3 {font-family: BigJohn; font-size: 30px;}
 			h4 {font-family: BigJohn; font-size: 20px;}
-			button {border-radius: 10px; border: 0; padding: 10px; cursor: pointer; margin: 50px auto 150px;}
-			footer {background-color: #494949; font-family: BigJohn; font-size: 1vw; margin: auto; color: white; display: table-cell; vertical-align: middle;}
+			button {border-radius: 100%; width: 200px; height: 200px; border: 0; padding: 10px; cursor: pointer; margin: 50px; font-size: 20px; font-family: BigJohn;}
+			button:hover {background-color: #ccc;}
+			footer {background-color: #202020; font-family: BigJohn; font-size: 18px; margin: auto; color: white; display: table-cell; vertical-align: middle;}
 			table {border-collapse: collapse; margin: 40px auto;}
 			td {cursor: pointer; background-color: gray; border: 1px solid white; height: 50px; width: 50px;}
-			#gamewrapper {min-height: 460px; background-color: rgba(0,0,0,0.5); padding-top: 30px;}	
+			#gamewrapper {min-height: 420px; vertical-align: middle;}	
 			#gameboard div {display: inline-table;}
 			#result {width: 20%; min-width: 300px;}
 			#p1, #p2 {width: 39%; min-width: 500px; text-align: center;}
 			#resultboard {max-height: 265px; width: 100%; background-color: white; color: #494949; overflow: auto; text-align: left;}
 			.game { color: white; margin: 0 auto; display: table-cell; vertical-align: middle;}
+			.setupDiv {width: 600px; display: inline-table; margin: 30px 50px;}
+			.gameDiv {max-width: 1000px; width: 80%;}
+			#setupPlayer1 {padding-top: 100px;}
+			#savePieces {border-radius: 10px; width: 180px; height: 50px; margin: 20px auto;}
+			select {padding: 10px 10px; width: 200px; border-radius: 10px 10px 0 0; border: 0; -webkit-appearance: none; -moz-appearance: none; margin: 10px 30px; font-family: BigJohn; font-size: 20px;}
+			option {font-size: 15px; padding: 5px 0 5px 5px;}
 		-->
 		</style>
 		<script src='game.js'></script>
@@ -36,38 +43,48 @@
 		<div id='gamewrapper'>
 
 			<div id='playerCount' class='game'>
-				<h3>How would you like to play?</h3>
-				<button onclick='setGame("pvc")'>Player vs. Computer</button>
-				<!--<button onclick='setGame("pvp")'>Player vs. Player</button>-->
+				<h3 style='padding-top: 20px;'>How would you like to play?</h3>
+				<button onclick='setGame("pvc")'>Player<br>vs.<br>Computer</button>
+				<button onclick='setGame("pvp")'>Player<br>vs.<br>Player</button>
 			</div>
 
 			<!-- 5 4 3 3 2 -->
-			<div id='setupPlayer1' class='game'>
-				<h3>Player 1: Place your pieces!</h3>
-				<h4>Select a ship from the drop-down list, as well as a direction,<br>and then click any square on the board to place it.</h4>
-				<h4>Place all 5 ships to continue.</h4>
-				<select id='pieces'>
-					<option value='c' selected>Carrier</option>
-					<option value='b'>Battleship</option>
-					<option value='d'>Destroyer</option>
-					<option value='s'>Submarine</option>
-					<option value='pb'>Patrol Boat</option>
-				</select>
-				<select id='direction'>
-					<option value='h' selected>Horizontal</option>
-					<option value='v'>Vertical</option>
-				</select>
-				<table id='board'></table>
+			<div id='setupPlayer1' class='game' style='display: none;'>
+				<div class='setupDiv'>
+					<h3 id='titleSetup'>Player 1:<br>Place your pieces!</h3>
+					<h4>Select a ship from the drop-down list, as well as a direction,<br>and then click any square on the board to place it.</h4>
+					<h4>Place all 5 ships to continue.</h4>
+					<select id='pieces'>
+						<option value='c' selected>Carrier</option>
+						<option value='b'>Battleship</option>
+						<option value='d'>Destroyer</option>
+						<option value='s'>Submarine</option>
+						<option value='pb'>Patrol Boat</option>
+					</select>
+					<select id='direction'>
+						<option value='h' selected>Horizontal</option>
+						<option value='v'>Vertical</option>
+					</select>
+					<button onclick="savePieces()" style='display: none;' id='savePieces'>Save Pieces</button>
+				</div>
+				<div class='setupDiv'><table id='board'></table></div>
 			</div>
 
-			<div id='gameboard' class='game'>
-				<h3 id='turn'>Player 1's Turn</h3>
-				<h4>Attack by clicking a square on the opponents board.<br>A red square indicates a HIT and a blue square indicates a MISS.<br>Each player's turn lasts until that player misses a shot.<br><br>Sink all of your opponent's ships to win.</h4>
-				
-				<div id='p1'>
+			<div id='gameboard' class='game' style='display: none;'>
+				<div class='gameDiv'>
+					<h3 id='turn'>Player 1's Turn</h3>
+					<h4>Attack by clicking a square on the opponents board.<br>A red square indicates a HIT and a blue square indicates a MISS.<br>Each player's turn lasts until that player misses a shot.<br><br>Sink all of your opponent's ships to win.</h4>
+				</div>
+				<div id='p1' style='display: none;'>
 					<h3>Player 1</h3>
 					<h4><span id='p1ShipsLeft'></span></h4>
 					<table id='p1board'></table>
+				</div>
+
+				<div id='p2'>
+					<h3 id='p2Title'>Computer</h3>
+					<h4><span id='p2ShipsLeft'></span></h4>
+					<table id='p2board'></table>
 				</div>
 
 				<div id='result'>
@@ -76,15 +93,11 @@
 					</div>
 				</div>
 
-				<div id='p2'>
-					<h3>Computer</h3>
-					<h4><span id='p2ShipsLeft'></span></h4>
-					<table id='p2board'></table>
-				</div>
+				
 			</div>
 
-			<div id='gameOver' class='game'>
-				<h1 id='winner'></h1><br>
+			<div id='gameOver' class='game' style='display: none;'>
+				<h1 id='winner' style='padding-top: 100px;'></h1><br>
 				<button onclick='location.reload()'>Play Again</button>
 			</div>
 	
