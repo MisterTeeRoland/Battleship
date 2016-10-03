@@ -326,9 +326,8 @@ function Fire(space) {
 						{
 							document.getElementById(space).style.backgroundColor = 'red';
 							checkSunk(ship);
-							setTimeout(function(){
-								compTurn();
-							}, 500);
+							if (gameType == 'pvc')
+								setTimeout(function(){ compTurn(); }, 500);
 							return;
 						}
 					}
@@ -349,12 +348,10 @@ function Fire(space) {
 	else {
 		if (turn == 'p1')
 			return;
-		else if (turn == 'p2') {
-			if (gameType == 'pvc')
-				setTimeout(function(){ compTurn(); }, 500);
-			else
-				return;
-		}
+		else if (turn == 'p2' && gameType == 'pvp')
+			return;
+		else if (turn == 'p2' && gameType == 'pvc')
+			setTimeout(function(){ compTurn(); }, 500);
 	}
 }
 
@@ -374,7 +371,7 @@ function checkSunk(ship) {
 				}
 				
 				if (shots == p2ShipArray[i].placement.length) {
-					document.getElementById('resultboard').innerHTML += "<ul dir='ltr'><li>P1: Sunk the "+ship.name+"</li></ul>";
+					document.getElementById('resultboard').innerHTML += "<ul><li>P1: Sunk the "+ship.name+"</li></ul>";
 					p2ShipArray.splice(i, 1);
 					document.getElementById('p2ShipsLeft').innerHTML = "Ships Left: " + p2ShipArray.length;
 					if (p2ShipArray.length == 0)
@@ -400,7 +397,10 @@ function checkSunk(ship) {
 				}
 				
 				if (shots == p1ShipArray[i].placement.length) {
-					document.getElementById('resultboard').innerHTML += "<ul dir='rtl'><li>Comp: Sunk the "+ship.name+"</li></ul>";
+					if (gameType == 'pvc')
+						document.getElementById('resultboard').innerHTML += "<ul><li>Comp: Sunk the "+ship.name+"</li></ul>";
+					else if (gameType == 'pvp')
+						document.getElementById('resultboard').innerHTML += "<ul><li>P2: Sunk the "+ship.name+"</li></ul>";
 					p1ShipArray.splice(i, 1);
 					document.getElementById('p1ShipsLeft').innerHTML = "Ships Left: " + p1ShipArray.length;
 					if (p1ShipArray.length == 0)
