@@ -6,32 +6,48 @@
 		<style>
 		<!--
 			@font-face {font-family: BigJohn; src: url(bigjohn.otf);}
-			body {background: black url(ocean.jpg) no-repeat center center fixed; background-size: cover; font-family: sans-serif; text-align: center; margin: 0;}
-			header {background-color: #202020; margin: 0; padding: 0; color: #93b5d4; display: table-cell; vertical-align: middle;}
-			h1 {font-family: BigJohn; font-size: 80px; margin: 0; padding: 0;}
-			h2 {font-family: BigJohn; font-size: 40px;}
-			h3 {font-family: BigJohn; font-size: 30px;}
-			h4 {font-family: BigJohn; font-size: 20px;}
-			button {border-radius: 100%; width: 200px; height: 200px; border: 0; padding: 10px; cursor: pointer; margin: 50px; font-size: 20px; font-family: BigJohn;}
+
+			body {background: black url(ocean.jpg) no-repeat center center fixed; background-size: cover; font-family: sans-serif; text-align: center; margin: 0; width: 100%;}
+			header {background-color: #222; margin: 0; padding: 30px 0; color: #93b5d4; width: 100%;}
+			h1 {font-family: BigJohn; font-size: 80px; margin: 0; padding: 0; -webkit-transition: font-size 1s; transition: font-size 1s;}
+			h2 {font-family: BigJohn; font-size: 30px; margin: 10px 0; padding: 0; -webkit-transition: font-size 1s; transition: font-size 1s;}
+			h3 {font-family: BigJohn; font-size: 30px; -webkit-transition: font-size 1s; transition: font-size 1s;}
+			h4 {font-family: BigJohn; font-size: 20px; -webkit-transition: font-size 1s; transition: font-size 1s;}
+			button {border-radius: 100%; width: 200px; height: 200px; border: 0; padding: 10px; cursor: pointer; margin: 50px; font-size: 20px; font-family: BigJohn; box-shadow: 3px 3px 3px black;}
 			button:hover {background-color: #ccc;}
-			footer {background-color: #202020; font-family: BigJohn; font-size: 18px; margin: auto; color: white; display: table-cell; vertical-align: middle;}
+			
 			table {border-collapse: collapse; margin: 40px auto;}
 			td {cursor: pointer; background-color: gray; border: 1px solid white; height: 50px; width: 50px;}
-			#gamewrapper {min-height: 420px; vertical-align: middle;}	
-			#gameboard div {display: inline-table;}
-			#result {width: 20%; min-width: 300px;}
-			#p1, #p2 {width: 39%; min-width: 500px; text-align: center;}
-			#resultboard {max-height: 265px; width: 100%; background-color: white; color: #494949; overflow: auto; text-align: left;}
-			.game { color: white; margin: 0 auto; display: table-cell; vertical-align: middle;}
-			.setupDiv {width: 600px; display: inline-table; margin: 30px 50px;}
-			.gameDiv {max-width: 1000px; width: 80%;}
-			#setupPlayer1 {padding-top: 100px;}
-			#savePieces {border-radius: 10px; width: 180px; height: 50px; margin: 20px auto;}
+			
 			select {padding: 10px 10px; width: 200px; border-radius: 10px 10px 0 0; border: 0; -webkit-appearance: none; -moz-appearance: none; margin: 10px 30px; font-family: BigJohn; font-size: 20px;}
 			option {font-size: 15px; padding: 5px 0 5px 5px;}
+
+			#gamewrapper {padding: 50px 0;}	
+			#gameboard div {display: inline-block; margin: auto; vertical-align: top;}
+			#p1, #p2 {width: 39%; min-width: 500px; text-align: center;}
+			#resultboard {max-height: 265px; width: 100%; background-color: white; color: #494949; overflow: auto; text-align: left;}
+			.game {color: white; margin: 0 auto;}
+			.setupDiv {width: 600px; display: inline-table; margin: 20px 50px;}
+			.gameDiv {max-width: 1000px; width: 80%;}
+			#setupPlayer1 {padding-top: 20px;}
+			#savePieces {border-radius: 10px; width: 180px; height: 50px; margin: 20px auto;}
+
+			#scoreboard {border: 2px solid #222; width: 300px; text-align: center;}
+			.scoreheader {padding: 10px 0; font-size: 20px; background-color: #222; color: white;}
+			#p1ShipsLeft, #p2ShipsLeft {font-size: 13px;}
+
+			.boardlegend {background-color: white; width: 400px; color: #222; padding: 10px 0;}
+			.boardlegend > div {vertical-align: middle; padding: 0 5px;}
+			.legend {width: 20px; height: 20px; border: 1px solid #222;}
+			.miss {background-color: #3d72c6;}
+			.hit {background-color: #d8574e;}
+			.sunk {background-color: #c9c16c;}
+			.empty {background-color: gray;}
+			
 		-->
 		</style>
 		<script src='game.js'></script>
+		<script src='../js/jquery3.1.1.min.js'></script>
 	</head>
 
 	<body>
@@ -43,7 +59,7 @@
 		<div id='gamewrapper'>
 
 			<div id='playerCount' class='game'>
-				<h3 style='padding-top: 20px;'>How would you like to play?</h3>
+				<h3>How would you like to play?</h3>
 				<button onclick='setGame("pvc")'>Player<br>vs.<br>Computer</button>
 				<button onclick='setGame("pvp")'>Player<br>vs.<br>Player</button>
 			</div>
@@ -72,28 +88,42 @@
 
 			<div id='gameboard' class='game' style='display: none;'>
 				<div class='gameDiv'>
+					<h4>Attack by clicking a square on the opponent's board.<br>Each player's turn lasts until that player misses a shot.<br><br>Sink all of your opponent's ships to win.</h4>
 					<h3 id='turn'>Player 1's Turn</h3>
-					<h4>Attack by clicking a square on the opponents board.<br>A red square indicates a HIT and a blue square indicates a MISS.<br>Each player's turn lasts until that player misses a shot.<br><br>Sink all of your opponent's ships to win.</h4>
 				</div>
 				<div id='p1' style='display: none;'>
 					<h3>Player 1</h3>
-					<h4><span id='p1ShipsLeft'></span></h4>
 					<table id='p1board'></table>
+					<div class='boardlegend'>
+						<div><div class='hit legend'></div> Hit</div> 
+						<div><div class='miss legend'></div> Miss</div>
+						<div><div class='sunk legend'></div> Sunk</div>
+						<div><div class='empty legend'></div> Unknown</div>
+					</div>
 				</div>
 
 				<div id='p2'>
 					<h3 id='p2Title'>Computer</h3>
-					<h4><span id='p2ShipsLeft'></span></h4>
 					<table id='p2board'></table>
-				</div>
-
-				<div id='result'>
-					<h3>Results</h3>
-					<div id='resultboard'>
+					<div class='boardlegend'>
+						<div><div class='hit legend'></div> Hit</div> 
+						<div><div class='miss legend'></div> Miss</div>
+						<div><div class='sunk legend'></div> Sunk</div>
+						<div><div class='empty legend'></div> Unknown</div>
 					</div>
 				</div>
 
-				
+				<div id='result'>
+					<h3>Scoreboard</h3>
+					<table id='scoreboard'>
+						<tr><th id='p1scoreheader' class='scoreheader'>Player 1<br><span id='p1ShipsLeft'></span></th><th id='p2scoreheader' class='scoreheader'>Computer<br><span id='p2ShipsLeft'></span></th></tr>
+						<tr><td id='p1Carrier'>Carrier</td><td id='p2Carrier'>Carrier</td></tr>
+						<tr><td id='p1Battleship'>Battleship</td><td id='p2Battleship'>Battleship</td></tr>
+						<tr><td id='p1Destroyer'>Destroyer</td><td id='p2Destroyer'>Destroyer</td></tr>
+						<tr><td id='p1Submarine'>Submarine</td><td id='p2Submarine'>Submarine</td></tr>
+						<tr><td id='p1PatrolBoat'>Patrol Boat</td><td id='p2PatrolBoat'>Patrol Boat</td></tr>
+					</table>
+				</div>
 			</div>
 
 			<div id='gameOver' class='game' style='display: none;'>
@@ -102,9 +132,5 @@
 			</div>
 	
 		</div>
-
-		<footer id='footer'>
-			<p>&copy; Copyright Tyler Roland <span id='date'></span>. All rights reserved.</p>
-		</footer>
 	</body>
 </html>
