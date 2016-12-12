@@ -17,7 +17,7 @@
 			button:hover {background-color: #ccc;}
 			
 			table {border-collapse: collapse; margin: 40px auto;}
-			td {cursor: pointer; background-color: gray; border: 1px solid white; height: 50px; width: 50px;}
+			td {cursor: pointer; background-color: gray; border: 1px solid white; height: 70px; width: 70px;}
 			
 			select {padding: 10px 10px; width: 200px; border-radius: 10px 10px 0 0; border: 0; -webkit-appearance: none; -moz-appearance: none; margin: 10px 30px; font-family: BigJohn; font-size: 20px;}
 			option {font-size: 15px; padding: 5px 0 5px 5px;}
@@ -30,9 +30,16 @@
 			.setupDiv {width: 600px; display: inline-table; margin: 20px 50px;}
 			.gameDiv {max-width: 1000px; width: 80%;}
 			#setupPlayer1 {padding-top: 20px;}
+			.setupDivs {width: 200px; display: inline-block; vertical-align: top; margin: auto 10px;}
+			.setupDivs div {padding: 5px 10px; background-color: #d8574e; border: 2px solid white; margin: 5px; font-family: BigJohn; cursor: pointer;}
+			.setupDivs div:hover {background-color: rgba(225,0,0,0.5);}
+			div.activeSetup {background-color: rgb(100,0,0);}
+			div.setupPlaced {background-color: rgb(50,146,98);}
 			#savePieces {border-radius: 10px; width: 180px; height: 50px; margin: 20px auto;}
 
-			#scoreboard {border: 2px solid #222; width: 300px; text-align: center;}
+			#scoreboard {border: 2px solid #222; width: 300px; text-align: center; margin: 40px;}
+			#scoreboard th, #scoreboard td {font-family: BigJohn; width: 160px; padding: 5px 0;}
+			#scoreboard th {padding: 20px 0;}
 			.scoreheader {padding: 10px 0; font-size: 20px; background-color: #222; color: white;}
 			#p1ShipsLeft, #p2ShipsLeft {font-size: 13px;}
 
@@ -68,19 +75,19 @@
 			<div id='setupPlayer1' class='game' style='display: none;'>
 				<div class='setupDiv'>
 					<h3 id='titleSetup'>Player 1:<br>Place your pieces!</h3>
-					<h4>Select a ship from the drop-down list, as well as a direction,<br>and then click any square on the board to place it.</h4>
+					<h4>Select a ship and a direction, and then click any square on the board to place it.</h4>
 					<h4>Place all 5 ships to continue.</h4>
-					<select id='pieces'>
-						<option value='c' selected>Carrier</option>
-						<option value='b'>Battleship</option>
-						<option value='d'>Destroyer</option>
-						<option value='s'>Submarine</option>
-						<option value='pb'>Patrol Boat</option>
-					</select>
-					<select id='direction'>
-						<option value='h' selected>Horizontal</option>
-						<option value='v'>Vertical</option>
-					</select>
+					<div id='shipDiv' class='setupDivs'>
+						<div id='c' onclick='setShip("c")'>Carrier (5)</div>
+						<div id='b' onclick='setShip("b")'>Battleship (4)</div>
+						<div id='d' onclick='setShip("d")'>Destroyer (3)</div>
+						<div id='s' onclick='setShip("s")'>Submarine (3)</div>
+						<div id='pb' onclick='setShip("pb")'>Patrol Boat (2)</div>
+					</div>
+					<div id='directionDiv' class='setupDivs'>
+						<div id='h' onclick='setDirection("h")'>Horizontal</div>
+						<div id='v' onclick='setDirection("v")'>Vertical</div>
+					</div>
 					<button onclick="savePieces()" style='display: none;' id='savePieces'>Save Pieces</button>
 				</div>
 				<div class='setupDiv'><table id='board'></table></div>
