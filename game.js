@@ -5,6 +5,11 @@ var p2Ship = "", p2Direction = "";
 var p1PiecesPlaced = 0, p2PiecesPlaced = 0;
 var p1ShipArray = [], p2ShipArray = [];
 
+var currentShip="", currentDirection="";
+
+var shipArray = ['c', 'b', 'd', 's', 'pb'];
+var directionArray = ['h', 'v'];
+
 /*---Pre game play---*/
 
 //sets game type and brings up P1 setup board
@@ -16,6 +21,22 @@ function setGame(type) {
 		$("p2scoreHeader").html("Player 2");
 }
 
+function setShip(ship) {
+	currentShip = ship;
+	for (var i = 0; i < shipArray.length; i++)
+		$("#"+shipArray[i]).removeClass('activeSetup');
+
+	$("#"+ship).removeClass('setupPlaced').addClass('activeSetup');
+}
+
+function setDirection(dir) {
+	currentDirection = dir;
+	for (var i = 0; i < directionArray.length; i++)
+		$("#"+directionArray[i]).removeClass('activeSetup');
+
+	$("#"+dir).removeClass('setupPlaced').addClass('activeSetup');
+}
+
 
 //function to place a ship at clicked location
 function placeCurrentPiece(cell) {
@@ -23,8 +44,8 @@ function placeCurrentPiece(cell) {
 	var col = cell.charAt(1);
 
 	if (turn == 'p1') {
-		var currentPiece = $('#pieces').val();
-		var pieceDirection = $('#direction').val();
+		var currentPiece = currentShip;
+		var pieceDirection = currentDirection;
 	}
 	else if (turn == 'p2') {
 		if (gameType == 'pvc') {
@@ -32,10 +53,19 @@ function placeCurrentPiece(cell) {
 			var pieceDirection = p2Direction;
 		}
 		else {
-			var currentPiece = $('#pieces').val();
-			var pieceDirection = $('#direction').val();
+			var currentPiece = currentShip;
+			var pieceDirection = currentDirection;
 		} 
 
+	}
+
+	if (currentPiece == '') {
+		alert("Pick a piece!");
+		return;
+	}
+	if (currentDirection == '') {
+		alert("Pick a direction!");
+		return;
 	}
 
 	if (currentPiece == 'c')
@@ -85,13 +115,14 @@ function placeCurrentPiece(cell) {
 	var placement = [];
 	if (validMove) {
 		
+		$("#"+currentShip).removeClass('activeSetup').addClass('setupPlaced');
 		//go through number of spaces and turn them green to mark that a "ship" is there
 		for (var i = 0; i < ship.length; i++) {
 			$("#"+row+""+col).css('background-color', ship.color);
 			
 			placement[placement.length] = (row+''+col); 
 
-			//console.log(ship.name + " placed at " + row+""+col);
+			//console.log(ship.name + " placed at " + row+""+col);  //for debugging, shows where computer ships are ;)
 
 			if (pieceDirection == 'h')
 				col++;
@@ -137,8 +168,20 @@ function placeCurrentPiece(cell) {
 function savePieces() {
 	if (turn == 'p1') {
 		clearBoard();
+
+		if (gameType == 'pvp') {
+			for(var i = 0; i < shipArray.length; i++)
+				$("#"+shipArray[i]).removeClass('setupPlaced');
+
+			for (var i = 0; i < directionArray.length; i++)
+				$("#"+directionArray[i]).removeClass('activeSetup');
+
+			currentShip="";
+			currentDirection="";
+		}
+
 		$('#savePieces').hide();
-		$('#titleSetup').html("Player 2: Place your pieces!");
+		$('#titleSetup').html("Player 2:<br>Place your pieces!");
 		turn = 'p2';
 
 		if (gameType == 'pvc')
@@ -147,7 +190,7 @@ function savePieces() {
 	else {
 		turn = 'p1';
 		$('#savePieces').hide();
-		$('#titleSetup').html("Player 1: Place your pieces!");
+		$('#titleSetup').html("Player 1:<br>Place your pieces!");
 		startGame();
 	}
 }
@@ -215,8 +258,7 @@ function setUpCompPieces() {
 	p2Ship = "";
 	p2Direction = "";
 
-	var shipArray = ['c', 'b', 'd', 's', 'pb'];
-	var directionArray = ['h', 'v'];
+	
 
 	//pick a random ship and a random direction
 	p2Ship = shipArray[Math.floor(Math.random()*5)];
