@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='UTF-8' />
+		<meta http-equiv="X-UA-Compatible" contingent="IE=edge"/>
+		<meta name='viewport' content='width=device-width, initial-scale=1' />
+		<title>Battleship</title>
+		
+		<script src='../js/jquery3.1.1.min.js'></script>
+		<script src="../css/bootstrap/js/bootstrap.min.js"></script>
+		<script src='game.js'></script>
+
+		<link rel="stylesheet" href="../css/bootstrap/css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" href="game.css">
+
+		<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+		<!-- [if lt IE 9]>
+			<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class='jumbotron' id='jumbotron'>
+			<h1 id='title'>Battleship</h1>
+			<h2>Welcome to maritime law.</h2>
+		</div><!-- End jumbotron div -->
+
+		<div class='container'>
+
+			<div id='gamewrapper'>
+
+				<div id='playerCount' class='game'>
+					<h3>How would you like to play?</h3>
+					<button onclick='setGame("pvc")'>Player<br>vs.<br>Computer</button>
+					<button onclick='setGame("pvp")'>Player<br>vs.<br>Player</button>
+				</div><!-- End playerCount div -->
+
+				<!-- 5 4 3 3 2 -->
+				<div id='setupPlayer1' class='game' style='display: none;'>
+					<div class='setupDiv'>
+						<h3 id='titleSetup'>Player 1:<br>Place your pieces!</h3>
+						<p>Select a ship and a direction.<br>Click any square on the board to place it.</p>
+						<p>Place all 5 ships to continue.</p>
+						<div id='shipDiv' class='setupDivs'>
+							<div id='c' onclick='setShip("c")'>Carrier (5)</div>
+							<div id='b' onclick='setShip("b")'>Battleship (4)</div>
+							<div id='d' onclick='setShip("d")'>Destroyer (3)</div>
+							<div id='s' onclick='setShip("s")'>Submarine (3)</div>
+							<div id='pb' onclick='setShip("pb")'>Patrol Boat (2)</div>
+						</div>
+						<div id='directionDiv' class='setupDivs'>
+							<div id='h' onclick='setDirection("h")'>Horizontal</div>
+							<div id='v' onclick='setDirection("v")'>Vertical</div>
+						</div>
+						<button onclick="savePieces()" style='display: none;' id='savePieces'>Save Pieces</button>
+					</div>
+					<div class='setupDiv'><table id='board'></table></div>
+				</div><!-- End setupPlayer1 div -->
+
+				<div id='gameboard' class='game' style='display: none;'>
+					
+					<div class='gameDiv'>
+						<h4>Attack by clicking a square on the opponent's board.<br>The turn ends when you miss a shot.<br><br>Sink all of the opponent's ships to win.</h4>
+						<h3 id='turn'>Player 1's Turn</h3>
+					</div><!-- End gameDiv div -->
+					
+					<div id='p1' style='display: none;'>
+						<h3>Player 1</h3>
+						<div class='boardlegend'>
+							<div><div class='hit legend'></div> Hit</div> 
+							<div><div class='miss legend'></div> Miss</div>
+							<div><div class='sunk legend'></div> Sunk</div>
+							<div><div class='empty legend'></div> Unknown</div>
+						</div>
+						<table id='p1board'></table>
+					</div><!-- End p1 board -->
+
+					<div id='p2'>
+						<h3 id='p2Title'>Computer's Board</h3>
+						<div class='boardlegend'>
+							<div><div class='hit legend'></div> Hit</div> 
+							<div><div class='miss legend'></div> Miss</div>
+							<div><div class='sunk legend'></div> Sunk</div>
+							<div><div class='empty legend'></div> Unknown</div>
+						</div>
+						<table id='p2board'></table>
+					</div><!-- End p2 div -->
+
+					<div id='result'>
+						<h3>Scoreboard</h3>
+						<table id='scoreboard'>
+							<tr><th id='p1scoreheader' class='scoreheader'>Player 1<br><span id='p1ShipsLeft'></span></th><th class='scoreheader'><span id='p2scoreheader'>Computer</span><br><span id='p2ShipsLeft'></span></th></tr>
+							<tr><td id='p1Carrier'>Carrier</td><td id='p2Carrier'>Carrier</td></tr>
+							<tr><td id='p1Battleship'>Battleship</td><td id='p2Battleship'>Battleship</td></tr>
+							<tr><td id='p1Destroyer'>Destroyer</td><td id='p2Destroyer'>Destroyer</td></tr>
+							<tr><td id='p1Submarine'>Submarine</td><td id='p2Submarine'>Submarine</td></tr>
+							<tr><td id='p1PatrolBoat'>Patrol Boat</td><td id='p2PatrolBoat'>Patrol Boat</td></tr>
+						</table>
+					</div><!-- End result div -->
+				</div><!-- End gameboard div -->
+
+				 <div id='gameOver' class='game' style='display: none;'>
+					<h1 id='winner'></h1><br>
+					<button onclick='location.reload()'>Play Again</button>
+				</div><!-- End gameOver div -->
+
+			</div><!-- End gamewrapper div -->
+		</div><!-- End .container div -->
+	</body>
+</html>
